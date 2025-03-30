@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static consts.PropertyConst.KEY_STOCKS;
+
 public class SettingsWindow  implements Configurable {
     private JPanel panel1;
     private JTextArea textAreaFund;
@@ -46,7 +48,8 @@ public class SettingsWindow  implements Configurable {
     public @Nullable JComponent createComponent() {
         PropertiesComponent instance = PropertiesComponent.getInstance();
         String value = instance.getValue("key_funds");
-        String value_stock = instance.getValue("key_stocks");
+        // 获取配置，设置到文本框
+        String value_stock = instance.getValue(KEY_STOCKS);
         String value_coin = instance.getValue("key_coins");
         boolean value_color = instance.getBoolean("key_colorful");
         textAreaFund.setText(value);
@@ -82,9 +85,10 @@ public class SettingsWindow  implements Configurable {
         if (StringUtils.isNotEmpty(errorMsg)) {
             throw new ConfigurationException(errorMsg);
         }
+        // 保存配置
         PropertiesComponent instance = PropertiesComponent.getInstance();
         instance.setValue("key_funds", textAreaFund.getText());
-        instance.setValue("key_stocks", textAreaStock.getText());
+        instance.setValue(KEY_STOCKS, textAreaStock.getText());
         instance.setValue("key_coins", textAreaCoin.getText());
         instance.setValue("key_colorful",!checkbox.isSelected());
         instance.setValue("key_cron_expression_fund", cronExpressionFund.getText());

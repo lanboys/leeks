@@ -33,6 +33,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static consts.PropertyConst.KEY_STOCKS;
+
 public class StockWindow {
     public static final String NAME = "Stock";
     private JPanel mPanel;
@@ -191,8 +193,8 @@ public class StockWindow {
     }
 
     private static List<String> loadStocks(){
-//        return FundWindow.getConfigList("key_stocks", "[,，]");
-        return SettingsWindow.getConfigList("key_stocks");
+//        return FundWindow.getConfigList(KEY_STOCKS, "[,，]");
+        return SettingsWindow.getConfigList(KEY_STOCKS);
     }
 
 }

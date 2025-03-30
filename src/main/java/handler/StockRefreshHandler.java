@@ -148,8 +148,13 @@ public abstract class StockRefreshHandler extends DefaultTableModel {
         table.getColumn(getColumnName(columnIndex1)).setCellRenderer(cellRenderer);
         table.getColumn(getColumnName(columnIndex2)).setCellRenderer(cellRenderer);
 
-        table.getColumn(getColumnName(columnIndex3)).setCellRenderer(cellRenderer);
-        table.getColumn(getColumnName(columnIndex4)).setCellRenderer(cellRenderer);
+        if (columnIndex3 > -1) {
+            table.getColumn(getColumnName(columnIndex3)).setCellRenderer(cellRenderer);
+        }
+
+        if (columnIndex4 > -1) {
+            table.getColumn(getColumnName(columnIndex4)).setCellRenderer(cellRenderer);
+        }
     }
 
     protected void updateData(StockBean bean) {
@@ -160,9 +165,10 @@ public abstract class StockRefreshHandler extends DefaultTableModel {
         if (convertData == null) {
             return;
         }
-        // 获取行
+        // 获取在第几行
         int index = findRowIndex(codeColumnIndex, bean.getCode());
         if (index >= 0) {
+            // 更新行
             updateRow(index, convertData);
         } else {
             addRow(convertData);

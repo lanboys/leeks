@@ -1,6 +1,8 @@
 package bean;
 
 import org.apache.commons.lang3.StringUtils;
+
+import consts.TableConst;
 import utils.PinYinUtils;
 
 import java.time.LocalDate;
@@ -11,6 +13,7 @@ import java.util.Objects;
 public class StockBean {
     private String code;
     private String name;
+    private String alias;
     private String now;
     private String change;//涨跌
     private String changePercent;
@@ -30,6 +33,14 @@ public class StockBean {
     private String incomePercent;//收益率
     private String income;//收益
 
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
     public StockBean() {
     }
 
@@ -42,6 +53,7 @@ public class StockBean {
                 this.costPrise = codeStr[1];
 //                this.cost = codeStr[2];
                 this.bonds = codeStr[2];
+                this.alias = codeStr[3];
             } else {
                 this.code = codeStr[0];
                 this.costPrise = "--";
@@ -63,6 +75,7 @@ public class StockBean {
                 this.costPrise = codeStr[1];
 //                this.cost = codeStr[2];
                 this.bonds = codeStr[2];
+                this.alias = codeStr[3];
             }
         }
     }
@@ -196,8 +209,9 @@ public class StockBean {
         switch (colums) {
             case "编码":
                 return this.getCode();
-            case "股票名称":
-                return colorful ? this.getName() : PinYinUtils.toPinYin(this.getName());
+            case TableConst.STOCK_NAME:
+                String name = StringUtils.isNotEmpty(this.getAlias()) ? this.getAlias() : this.getName();
+                return colorful ? name : PinYinUtils.toPinYin(this.getName());
             case "当前价":
                 return this.getNow();
             case "涨跌":
