@@ -2,6 +2,8 @@ package bean;
 
 import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.StringUtils;
+
+import consts.TableConst;
 import utils.PinYinUtils;
 
 import java.time.LocalDate;
@@ -168,7 +170,7 @@ public class FundBean {
      */
     public String getValueByColumn(String colums, boolean colorful) {
         switch (colums) {
-            case "编码":
+            case TableConst.CODE:
                 return this.getFundCode();
             case "基金名称":
                 return colorful ? this.getFundName() : PinYinUtils.toPinYin(this.getFundName());

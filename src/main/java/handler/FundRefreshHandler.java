@@ -6,6 +6,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+
+import consts.TableConst;
 import utils.PinYinUtils;
 import utils.WindowUtils;
 
@@ -43,7 +45,7 @@ public abstract class FundRefreshHandler extends DefaultTableModel {
 
     {
         for (int i = 0; i < columnNames.length; i++) {
-            if ("编码".equals(columnNames[i])) {
+            if (TableConst.CODE.equals(columnNames[i])) {
                 codeColumnIndex = i;
             }
         }

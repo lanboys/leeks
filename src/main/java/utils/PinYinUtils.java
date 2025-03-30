@@ -12,6 +12,12 @@ public class PinYinUtils {
 
     static {
         pinYinMap.put(TableConst.STOCK_NAME, "stock");
+        pinYinMap.put(TableConst.UP_DOWN_RATIO, "upr");
+        pinYinMap.put(TableConst.UP_DOWN, "up");
+        pinYinMap.put(TableConst.CODE, "code");
+        pinYinMap.put(TableConst.HIGH, "high");
+        pinYinMap.put(TableConst.LOW, "low");
+        pinYinMap.put(TableConst.PRICE, "price");
     }
 
     public static String toPinYin(String input) {

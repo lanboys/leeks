@@ -6,6 +6,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+
+import consts.TableConst;
 import utils.PinYinUtils;
 import utils.WindowUtils;
 
@@ -16,13 +18,20 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Stream;
+
+import static consts.TableConst.HIGH;
+import static consts.TableConst.LOW;
+import static consts.TableConst.PRICE;
+import static consts.TableConst.UP_DOWN;
+import static consts.TableConst.UP_DOWN_RATIO;
 
 public abstract class StockRefreshHandler extends DefaultTableModel {
     private static String[] columnNames;
     /**
      * 存放【编码】的位置，更新数据时用到
      */
-    public int codeColumnIndex;
+    public int codeColumnIndex=-1;
 
     private JTable table;
     private boolean colorful = true;
@@ -44,9 +53,15 @@ public abstract class StockRefreshHandler extends DefaultTableModel {
 
     {
         for (int i = 0; i < columnNames.length; i++) {
-            if ("编码".equals(columnNames[i])) {
+            if (TableConst.CODE.equals(columnNames[i])) {
                 codeColumnIndex = i;
             }
+        }
+
+        if (codeColumnIndex == -1) {
+            PropertiesComponent instance = PropertiesComponent.getInstance();
+            instance.setValue(WindowUtils.STOCK_TABLE_HEADER_KEY, WindowUtils.STOCK_TABLE_HEADER_VALUE);
+            throw new RuntimeException("code index is not found");
         }
     }
 
@@ -77,8 +92,11 @@ public abstract class StockRefreshHandler extends DefaultTableModel {
             Double v2 = NumberUtils.toDouble(StringUtils.remove((String) o2, '%'));
             return v1.compareTo(v2);
         };
-        Arrays.stream("当前价,涨跌,涨跌幅,最高价,最低价".split(",")).map(name -> WindowUtils.getColumnIndexByName(columnNames, name))
-                .filter(index -> index >= 0).forEach(index -> rowSorter.setComparator(index, doubleComparator));
+        Stream.of(UP_DOWN_RATIO, UP_DOWN, HIGH, LOW, PRICE)
+                .map(name -> WindowUtils.getColumnIndexByName(columnNames, name))
+                .filter(index -> index >= 0)
+                .forEach(index -> rowSorter.setComparator(index, doubleComparator));
+
         table.setRowSorter(rowSorter);
         columnColors(colorful);
     }
@@ -139,8 +157,8 @@ public abstract class StockRefreshHandler extends DefaultTableModel {
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
-        int columnIndex1 = WindowUtils.getColumnIndexByName(columnNames, "涨跌");
-        int columnIndex2 = WindowUtils.getColumnIndexByName(columnNames, "涨跌幅");
+        int columnIndex1 = WindowUtils.getColumnIndexByName(columnNames, TableConst.UP_DOWN);
+        int columnIndex2 = WindowUtils.getColumnIndexByName(columnNames, UP_DOWN_RATIO);
 
         int columnIndex3 = WindowUtils.getColumnIndexByName(columnNames, "收益率");
         int columnIndex4 = WindowUtils.getColumnIndexByName(columnNames, "收益");

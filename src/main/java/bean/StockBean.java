@@ -5,8 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import consts.TableConst;
 import utils.PinYinUtils;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,7 +46,7 @@ public class StockBean {
     public StockBean(String code) {
         if (StringUtils.isNotBlank(code)) {
             String[] codeStr = code.split(",");
-            if (codeStr.length > 2) {
+            if (codeStr.length > 3) {
                 this.code = codeStr[0];
                 this.costPrise = codeStr[1];
 //                this.cost = codeStr[2];
@@ -70,7 +68,7 @@ public class StockBean {
         this.code = code;
         if(codeMap.containsKey(code)){
             String[] codeStr = codeMap.get(code);
-            if (codeStr.length > 2) {
+            if (codeStr.length > 3) {
                 this.code = codeStr[0];
                 this.costPrise = codeStr[1];
 //                this.cost = codeStr[2];
@@ -207,28 +205,28 @@ public class StockBean {
      */
     public String getValueByColumn(String colums, boolean colorful) {
         switch (colums) {
-            case "编码":
+            case TableConst.CODE:
                 return this.getCode();
             case TableConst.STOCK_NAME:
                 String name = StringUtils.isNotEmpty(this.getAlias()) ? this.getAlias() : this.getName();
                 return colorful ? name : PinYinUtils.toPinYin(this.getName());
-            case "当前价":
+            case TableConst.PRICE:
                 return this.getNow();
-            case "涨跌":
+            case TableConst.UP_DOWN:
                 String changeStr = "--";
                 if (this.getChange() != null) {
                     changeStr = this.getChange().startsWith("-") ? this.getChange() : "+" + this.getChange();
                 }
                 return changeStr;
-            case "涨跌幅":
+            case TableConst.UP_DOWN_RATIO:
                 String changePercentStr = "--";
                 if (this.getChangePercent() != null) {
                     changePercentStr = this.getChangePercent().startsWith("-") ? this.getChangePercent() : "+" + this.getChangePercent();
                 }
                 return changePercentStr + "%";
-            case "最高价":
+            case TableConst.HIGH:
                 return this.getMax();
-            case "最低价":
+            case TableConst.LOW:
                 return this.getMin();
             case "成本价":
                 return this.getCostPrise();

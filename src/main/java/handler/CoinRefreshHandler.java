@@ -6,6 +6,7 @@ import com.intellij.ui.table.JBTable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import bean.CoinBean;
+import consts.TableConst;
 import utils.PinYinUtils;
 import utils.WindowUtils;
 
@@ -44,7 +45,7 @@ public abstract class CoinRefreshHandler extends DefaultTableModel {
 
     {
         for (int i = 0; i < columnNames.length; i++) {
-            if ("编码".equals(columnNames[i])) {
+            if (TableConst.CODE.equals(columnNames[i])) {
                 codeColumnIndex = i;
             }
         }
@@ -131,7 +132,7 @@ public abstract class CoinRefreshHandler extends DefaultTableModel {
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
-        int columnIndex = WindowUtils.getColumnIndexByName(columnNames, "涨跌幅");
+        int columnIndex = WindowUtils.getColumnIndexByName(columnNames, TableConst.UP_DOWN_RATIO);
         table.getColumn(getColumnName(columnIndex)).setCellRenderer(cellRenderer);
     }
 

@@ -2,6 +2,7 @@ package bean;
 
 import java.text.DecimalFormat;
 
+import consts.TableConst;
 
 public class CoinBean {
     static DecimalFormat decimalFormat = new DecimalFormat("#.00");
@@ -83,17 +84,17 @@ public class CoinBean {
      */
     public String getValueByColumn(String colums, boolean colorful) {
         switch (colums) {
-            case "编码":
+            case TableConst.CODE:
                 return this.getSymbol();
-            case "涨跌":
+            case TableConst.UP_DOWN:
                 return String.valueOf(this.getRegularMarketChange());
-            case "涨跌幅":
+            case TableConst.UP_DOWN_RATIO:
                 return decimalFormat.format(this.getRegularMarketChangePercent())+"%";
-            case "最高价":
+            case TableConst.HIGH:
                 return String.valueOf(this.getRegularMarketDayHigh());
-            case "最低价":
+            case TableConst.LOW:
                 return String.valueOf(this.getRegularMarketDayLow());
-            case "当前价":
+            case TableConst.PRICE:
                 return String.valueOf(this.getRegularMarketPrice());
             case "更新时间":
                 String timeStr = "--";
