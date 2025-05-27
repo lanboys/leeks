@@ -53,7 +53,7 @@ public class PopupsUiUtil {
      * @return 可能为null
      */
     public static String getImageUrlByStock(String stockCode, StockShowType type) throws MalformedURLException {
-        String prefix = StringUtils.substring(stockCode, 0, 2);
+        String prefix = StringUtilss.substring(stockCode, 0, 2);
         String url = "http://image.sinajs.cn/newchart/";
         switch (prefix) {
             case "sh":
@@ -72,10 +72,11 @@ public class PopupsUiUtil {
                 // 周K线图 http://image.sinajs.cn/newchart/usstock/weekly/aapl.gif
                 // 月K线图 http://image.sinajs.cn/newchart/usstock/monthly/aapl.gif
                 if (StockShowType.min.equals(type)) {
-                    url = String.format("%s/png/%s/%s/%s.png?%s", url, type.getType(), prefix, StringUtils.substring(stockCode, 2),
+                    url = String.format("%s/png/%s/%s/%s.png?%s", url, type.getType(), prefix,
+                            StringUtilss.substring(stockCode, 2),
                             System.currentTimeMillis());
                 } else {
-                    url = String.format("%s/%sstock/%s/%s.gif?%s", url, prefix, type.getType(), StringUtils.substring(stockCode, 2),
+                    url = String.format("%s/%sstock/%s/%s.gif?%s", url, prefix, type.getType(), StringUtilss.substring(stockCode, 2),
                             System.currentTimeMillis());
                 }
                 break;
@@ -86,10 +87,10 @@ public class PopupsUiUtil {
                 // 周K线图 http://image.sinajs.cn/newchart/hk_stock/weekly/02202.gif
                 // 月K线图 http://image.sinajs.cn/newchart/hk_stock/monthly/02202.gif
                 if (StockShowType.min.equals(type)) {
-                    url = String.format("%s/png/%s/%s/%s.png?%s", url, type.getType(), prefix, StringUtils.substring(stockCode, 2),
+                    url = String.format("%s/png/%s/%s/%s.png?%s", url, type.getType(), prefix, StringUtilss.substring(stockCode, 2),
                             System.currentTimeMillis());
                 } else {
-                    url = String.format("%s/%s_stock/%s/%s.gif?%s", url, prefix, type.getType(), StringUtils.substring(stockCode, 2),
+                    url = String.format("%s/%s_stock/%s/%s.gif?%s", url, prefix, type.getType(), StringUtilss.substring(stockCode, 2),
                             System.currentTimeMillis());
                 }
                 break;
@@ -128,7 +129,7 @@ public class PopupsUiUtil {
                 JComponent component = newSelection.getComponent();
                 if (component instanceof JLabel) {
                     JLabel label = (JLabel) component;
-                    if (StringUtils.isNotBlank(label.getText())) {
+                    if (StringUtilss.isNotBlank(label.getText())) {
                         try {
                             label.setIcon(new ImageIcon(new URL(label.getText())));
                             label.setText(null);

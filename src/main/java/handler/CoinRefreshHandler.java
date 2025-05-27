@@ -7,7 +7,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import bean.CoinBean;
 import consts.TableConst;
+import utils.NumberUtil;
 import utils.PinYinUtils;
+import utils.StringUtilss;
 import utils.WindowUtils;
 
 import javax.swing.*;
@@ -31,7 +33,7 @@ public abstract class CoinRefreshHandler extends DefaultTableModel {
     static {
         PropertiesComponent instance = PropertiesComponent.getInstance();
         String tableHeader = instance.getValue(WindowUtils.COIN_TABLE_HEADER_KEY);
-        if (StringUtils.isBlank(tableHeader)) {
+        if (StringUtilss.isBlank(tableHeader)) {
             instance.setValue(WindowUtils.COIN_TABLE_HEADER_KEY, WindowUtils.COIN_TABLE_HEADER_VALUE);
             tableHeader = WindowUtils.COIN_TABLE_HEADER_VALUE;
         }
@@ -112,7 +114,7 @@ public abstract class CoinRefreshHandler extends DefaultTableModel {
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                double temp = NumberUtils.toDouble(StringUtils.remove(Objects.toString(value), "%"));
+                double temp = NumberUtil.toDouble(StringUtilss.remove(Objects.toString(value), "%"));
                 if (temp > 0) {
                     if (colorful) {
                         setForeground(JBColor.RED);
@@ -188,7 +190,7 @@ public abstract class CoinRefreshHandler extends DefaultTableModel {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             Object valueAt = getValueAt(rowIndex, columnIndex);
-            if (StringUtils.equalsIgnoreCase(value, valueAt.toString())) {
+            if (StringUtilss.equalsIgnoreCase(value, valueAt.toString())) {
                 return rowIndex;
             }
         }

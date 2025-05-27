@@ -1,12 +1,17 @@
+import com.google.gson.reflect.TypeToken;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
+
+import bean.StockBean;
 import quartz.QuartzManager;
+import utils.GsonUtil;
 import utils.HttpClientPool;
 import utils.LogUtil;
+import utils.StringUtilss;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,11 +28,13 @@ public class SettingsWindow  implements Configurable {
     private JPanel panel1;
     private JTextArea textAreaFund;
     private JTextArea textAreaStock;
+    // 超隐蔽模式
     private JCheckBox checkbox;
     /**
      * 使用tab界面，方便不同的设置分开进行控制
      */
     private JTabbedPane tabbedPane1;
+    // 表格条纹，斑马线
     private JCheckBox checkBoxTableStriped;
     private JTextField cronExpressionFund;
     private JTextField cronExpressionStock;
@@ -79,10 +86,14 @@ public class SettingsWindow  implements Configurable {
         return true;
     }
 
+    /**
+     * 应用 按钮
+     * @throws ConfigurationException
+     */
     @Override
     public void apply() throws ConfigurationException {
         String errorMsg = checkConfig();
-        if (StringUtils.isNotEmpty(errorMsg)) {
+        if (StringUtilss.isNotEmpty(errorMsg)) {
             throw new ConfigurationException(errorMsg);
         }
         // 保存配置
@@ -124,7 +135,7 @@ public class SettingsWindow  implements Configurable {
 
     public static List<String> getConfigList(String key, String split) {
         String value = PropertiesComponent.getInstance().getValue(key);
-        if (StringUtils.isEmpty(value)) {
+        if (StringUtilss.isEmpty(value)) {
             return new ArrayList<>();
         }
         Set<String> set = new LinkedHashSet<>();
@@ -139,7 +150,7 @@ public class SettingsWindow  implements Configurable {
 
     public static List<String> getConfigList(String key) {
         String value = PropertiesComponent.getInstance().getValue(key);
-        if (StringUtils.isEmpty(value)) {
+        if (StringUtilss.isEmpty(value)) {
             return new ArrayList<>();
         }
         Set<String> set = new LinkedHashSet<>();
@@ -155,6 +166,17 @@ public class SettingsWindow  implements Configurable {
             }
         }
         return new ArrayList<>(set);
+    }
+
+    public static  List<StockBean>  getJsonConfigList(String key) {
+        String value = PropertiesComponent.getInstance().getValue(key);
+        if (StringUtilss.isEmpty(value)) {
+            return new ArrayList<>();
+        }
+
+        return GsonUtil.fromJson(value, new TypeToken<List<StockBean>>() {
+        });
+
     }
 
     /**

@@ -8,7 +8,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import consts.TableConst;
+import utils.NumberUtil;
 import utils.PinYinUtils;
+import utils.StringUtilss;
 import utils.WindowUtils;
 
 import javax.swing.*;
@@ -32,7 +34,7 @@ public abstract class FundRefreshHandler extends DefaultTableModel {
     static {
         PropertiesComponent instance = PropertiesComponent.getInstance();
         String tableHeader = instance.getValue(WindowUtils.FUND_TABLE_HEADER_KEY);
-        if (StringUtils.isBlank(tableHeader)) {
+        if (StringUtilss.isBlank(tableHeader)) {
             instance.setValue(WindowUtils.FUND_TABLE_HEADER_KEY, WindowUtils.FUND_TABLE_HEADER_VALUE);
             tableHeader = WindowUtils.FUND_TABLE_HEADER_VALUE;
         }
@@ -74,8 +76,8 @@ public abstract class FundRefreshHandler extends DefaultTableModel {
         }
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(this);
         Comparator<Object> doubleComparator = (o1, o2) -> {
-            Double v1 = NumberUtils.toDouble(StringUtils.remove((String) o1, '%'));
-            Double v2 = NumberUtils.toDouble(StringUtils.remove((String) o2, '%'));
+            Double v1 = NumberUtil.toDouble(StringUtilss.remove((String) o1, "%"));
+            Double v2 = NumberUtil.toDouble(StringUtilss.remove((String) o2, "%"));
             return v1.compareTo(v2);
         };
         Arrays.stream("估算净值,估算涨跌".split(",")).map(name -> WindowUtils.getColumnIndexByName(columnNames, name))
@@ -125,7 +127,7 @@ public abstract class FundRefreshHandler extends DefaultTableModel {
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                double temp = NumberUtils.toDouble(StringUtils.remove(Objects.toString(value), "%"));
+                double temp = NumberUtil.toDouble(StringUtilss.remove(Objects.toString(value), "%"));
                 if (temp > 0) {
                     if (colorful) {
                         setForeground(JBColor.RED);
@@ -209,7 +211,7 @@ public abstract class FundRefreshHandler extends DefaultTableModel {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             Object valueAt = getValueAt(rowIndex, columnIndex);
-            if (StringUtils.equalsIgnoreCase(value, valueAt.toString())) {
+            if (StringUtilss.equalsIgnoreCase(value, valueAt.toString())) {
                 return rowIndex;
             }
         }

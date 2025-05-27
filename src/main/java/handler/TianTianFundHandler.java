@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.apache.commons.lang.StringUtils;
 import utils.HttpClientPool;
 import utils.LogUtil;
+import utils.StringUtilss;
 
 import javax.swing.*;
 import java.math.BigDecimal;
@@ -70,7 +71,7 @@ public class TianTianFundHandler extends FundRefreshHandler {
 
                         BigDecimal now = new BigDecimal(bean.getGsz());
                         String costPriceStr = bean.getCostPrise();
-                        if (StringUtils.isNotEmpty(costPriceStr)) {
+                        if (StringUtilss.isNotEmpty(costPriceStr)) {
                             BigDecimal costPriceDec = new BigDecimal(costPriceStr);
                             BigDecimal incomeDiff = now.add(costPriceDec.negate());
                             if (costPriceDec.compareTo(BigDecimal.ZERO) <= 0) {
@@ -84,7 +85,7 @@ public class TianTianFundHandler extends FundRefreshHandler {
                             }
 
                             String bondStr = bean.getBonds();
-                            if (StringUtils.isNotEmpty(bondStr)) {
+                            if (StringUtilss.isNotEmpty(bondStr)) {
                                 BigDecimal bondDec = new BigDecimal(bondStr);
                                 BigDecimal incomeDec = incomeDiff.multiply(bondDec)
                                         .setScale(2, RoundingMode.HALF_UP);

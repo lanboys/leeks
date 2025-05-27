@@ -48,7 +48,7 @@ public class FundWindow implements ToolWindowFactory {
         //先加载代理
         loadProxySetting();
 
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        ContentFactory contentFactory = ContentFactory.getInstance();
         Content content = contentFactory.createContent(mPanel, NAME, false);
         //股票
         Content content_stock = contentFactory.createContent(stockWindow.getmPanel(), StockWindow.NAME, false);
@@ -58,7 +58,7 @@ public class FundWindow implements ToolWindowFactory {
         contentManager.addContent(content);
         contentManager.addContent(content_stock);
         contentManager.addContent(content_coin);
-        if (StringUtils.isEmpty(PropertiesComponent.getInstance().getValue("key_funds"))) {
+        if (StringUtilss.isEmpty(PropertiesComponent.getInstance().getValue("key_funds"))) {
             // 没有配置基金数据，选择展示股票
             contentManager.setSelectedContent(content_stock);
         }
@@ -209,7 +209,7 @@ public class FundWindow implements ToolWindowFactory {
                 dataMap.put(HandlerJob.KEY_HANDLER, fundRefreshHandler);
                 dataMap.put(HandlerJob.KEY_CODES, codes);
                 String cronExpression = instance.getValue("key_cron_expression_fund");
-                if (StringUtils.isEmpty(cronExpression)) {
+                if (StringUtilss.isEmpty(cronExpression)) {
                     cronExpression = "0 * * * * ?";
                 }
                 quartzManager.runJob(HandlerJob.class, cronExpression, dataMap);

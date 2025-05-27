@@ -9,6 +9,8 @@ import com.intellij.ui.AnActionButton;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.table.JBTable;
+
+import bean.StockBean;
 import handler.SinaStockHandler;
 import handler.StockRefreshHandler;
 import handler.TencentStockHandler;
@@ -20,6 +22,7 @@ import quartz.HandlerJob;
 import quartz.QuartzManager;
 import utils.LogUtil;
 import utils.PopupsUiUtil;
+import utils.StringUtilss;
 import utils.WindowUtils;
 
 import javax.swing.*;
@@ -29,7 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.net.MalformedURLException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -167,7 +170,7 @@ public class StockWindow {
         if (handler != null) {
             PropertiesComponent instance = PropertiesComponent.getInstance();
             handler.refreshColorful(instance.getBoolean("key_colorful"));
-            List<String> codes = loadStocks();
+            List<StockBean> codes = loadStocks();
             if (CollectionUtils.isEmpty(codes)) {
                 stop(); //如果没有数据则不需要启动时钟任务浪费资源
             } else {
@@ -177,7 +180,7 @@ public class StockWindow {
                 dataMap.put(HandlerJob.KEY_HANDLER, handler);
                 dataMap.put(HandlerJob.KEY_CODES, codes);
                 String cronExpression = instance.getValue("key_cron_expression_stock");
-                if (StringUtils.isEmpty(cronExpression)) {
+                if (StringUtilss.isEmpty(cronExpression)) {
                     cronExpression = "*/10 * * * * ?";
                 }
                 quartzManager.runJob(HandlerJob.class, cronExpression, dataMap);
@@ -192,9 +195,9 @@ public class StockWindow {
         }
     }
 
-    private static List<String> loadStocks(){
-//        return FundWindow.getConfigList(KEY_STOCKS, "[,，]");
-        return SettingsWindow.getConfigList(KEY_STOCKS);
+    private static List<StockBean> loadStocks() {
+        //        return FundWindow.getConfigList(KEY_STOCKS, "[,，]");
+        return SettingsWindow.getJsonConfigList(KEY_STOCKS);
     }
 
 }

@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import quartz.HandlerJob;
 import quartz.QuartzManager;
+import utils.StringUtilss;
 import utils.WindowUtils;
 
 import javax.swing.*;
@@ -113,7 +114,7 @@ public class CoinWindow {
                 dataMap.put(HandlerJob.KEY_HANDLER, handler);
                 dataMap.put(HandlerJob.KEY_CODES, codes);
                 String cronExpression = instance.getValue("key_cron_expression_coin");
-                if (StringUtils.isEmpty(cronExpression)) {
+                if (StringUtilss.isEmpty(cronExpression)) {
                     cronExpression = "*/10 * * * * ?";
                 }
                 quartzManager.runJob(HandlerJob.class, cronExpression, dataMap);

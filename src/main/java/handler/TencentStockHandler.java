@@ -2,8 +2,10 @@ package handler;
 
 import bean.StockBean;
 import org.apache.commons.lang.StringUtils;
+
 import utils.HttpClientPool;
 import utils.LogUtil;
+import utils.StringUtilss;
 
 import javax.swing.*;
 import java.math.BigDecimal;
@@ -15,7 +17,7 @@ import java.util.List;
 
 public class TencentStockHandler extends StockRefreshHandler {
     private String urlPara;
-    private HashMap<String, String[]> codeMap;
+    private HashMap<String, StockBean> codeMap;
     private JLabel refreshTimeLabel;
 
 
@@ -25,7 +27,7 @@ public class TencentStockHandler extends StockRefreshHandler {
     }
 
     @Override
-    public void handle(List<String> code) {
+    public void handle(List<StockBean> code) {
 
         //LogUtil.info("Leeks 更新Stock编码数据.");
 //        clearRow();
@@ -36,16 +38,9 @@ public class TencentStockHandler extends StockRefreshHandler {
         //股票编码，英文分号分隔（成本价和成本接在编码后用逗号分隔）
         List<String> codeList = new ArrayList<>();
         codeMap = new HashMap<>();
-        for (String str : code) {
-            //兼容原有设置
-            String[] strArray;
-            if (str.contains(",")) {
-                strArray = str.split(",");
-            } else {
-                strArray = new String[]{str};
-            }
-            codeList.add(strArray[0]);
-            codeMap.put(strArray[0], strArray);
+        for (StockBean str : code) {
+            codeList.add(str.getCode());
+            codeMap.put(str.getCode(), str );
         }
 
         urlPara = String.join(",", codeList);
@@ -59,7 +54,7 @@ public class TencentStockHandler extends StockRefreshHandler {
     }
 
     private void stepAction() {
-        if (StringUtils.isEmpty(urlPara)) {
+        if (StringUtilss.isEmpty(urlPara)) {
             return;
         }
         try {
@@ -88,7 +83,7 @@ public class TencentStockHandler extends StockRefreshHandler {
 
             BigDecimal now = new BigDecimal(values[3]);
             String costPriceStr = bean.getCostPrise();
-            if (StringUtils.isNotEmpty(costPriceStr)) {
+            if (StringUtilss.isNotEmpty(costPriceStr)) {
                 BigDecimal costPriceDec = new BigDecimal(costPriceStr);
                 BigDecimal incomeDiff = now.add(costPriceDec.negate());
                 if (costPriceDec.compareTo(BigDecimal.ZERO) <= 0) {
@@ -102,7 +97,7 @@ public class TencentStockHandler extends StockRefreshHandler {
                 }
 
                 String bondStr = bean.getBonds();
-                if (StringUtils.isNotEmpty(bondStr)) {
+                if (StringUtilss.isNotEmpty(bondStr)) {
                     BigDecimal bondDec = new BigDecimal(bondStr);
                     BigDecimal incomeDec = incomeDiff.multiply(bondDec)
                             .setScale(2, RoundingMode.HALF_UP);

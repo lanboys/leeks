@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import consts.TableConst;
 import utils.PinYinUtils;
+import utils.StringUtilss;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +32,7 @@ public class FundBean {
     }
 
     public FundBean(String fundCode) {
-        if (StringUtils.isNotBlank(fundCode)) {
+        if (StringUtilss.isNotBlank(fundCode)) {
             String[] codeStr = fundCode.split(",");
             if (codeStr.length > 2) {
                 this.fundCode = codeStr[0];

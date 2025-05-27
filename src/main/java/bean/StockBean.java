@@ -4,18 +4,22 @@ import org.apache.commons.lang3.StringUtils;
 
 import consts.TableConst;
 import utils.PinYinUtils;
+import utils.StringUtilss;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Objects;
 
 public class StockBean {
-    private String code;
-    private String name;
-    private String alias;
-    private String now;
-    private String change;//涨跌
+
+    private String code = "--";
+    private String name = "--";
+    private String alias = "--";
+    private String now = "--";
+    private String change; // 涨跌
     private String changePercent;
     private String time;
+    private int order = 0;
     /**
      * 最高价
      */
@@ -42,39 +46,32 @@ public class StockBean {
     public StockBean() {
     }
 
-    //配置code同时配置成本价和成本值
-    public StockBean(String code) {
-        if (StringUtils.isNotBlank(code)) {
-            String[] codeStr = code.split(",");
-            if (codeStr.length > 3) {
-                this.code = codeStr[0];
-                this.costPrise = codeStr[1];
-//                this.cost = codeStr[2];
-                this.bonds = codeStr[2];
-                this.alias = codeStr[3];
-            } else {
-                this.code = codeStr[0];
-                this.costPrise = "--";
-//                this.cost = "--";
-                this.bonds = "--";
-            }
-        } else {
-            this.code = code;
-        }
-        this.name = "--";
+    // 配置code同时配置成本价和成本值
+    public StockBean(StockBean stockBean) {
+
+        copy(stockBean,this);
+
     }
 
-    public StockBean(String code, Map<String, String[]> codeMap){
-        this.code = code;
-        if(codeMap.containsKey(code)){
-            String[] codeStr = codeMap.get(code);
-            if (codeStr.length > 3) {
-                this.code = codeStr[0];
-                this.costPrise = codeStr[1];
-//                this.cost = codeStr[2];
-                this.bonds = codeStr[2];
-                this.alias = codeStr[3];
+    private static void copy(StockBean src,StockBean desc) {
+        if (src != null) {
+            Class<?> clazz = src.getClass();
+            for (Field field : clazz.getDeclaredFields()) {
+                try {
+                    field.setAccessible(true);
+                    Object value = field.get(src);
+                    field.set(desc, value);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("反射拷贝属性失败", e);
+                }
             }
+        }
+    }
+
+    public StockBean(String code, Map<String, StockBean> codeMap) {
+        this.code = code;
+        if (codeMap.containsKey(code)) {
+            copy(codeMap.get(code),this);
         }
     }
 
@@ -159,12 +156,12 @@ public class StockBean {
     }
 
     //    public String getCost() {
-//        return cost;
-//    }
-//
-//    public void setCost(String cost) {
-//        this.cost = cost;
-//    }
+    //        return cost;
+    //    }
+    //
+    //    public void setCost(String cost) {
+    //        this.cost = cost;
+    //    }
 
     public String getIncomePercent() {
         return incomePercent;
@@ -184,8 +181,10 @@ public class StockBean {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         StockBean bean = (StockBean) o;
         return Objects.equals(code, bean.code);
     }
@@ -195,20 +194,19 @@ public class StockBean {
         return Objects.hash(code);
     }
 
-
     /**
      * 返回列名的VALUE 用作展示
      *
-     * @param colums   字段名
+     * @param columnName   字段名, 中文
      * @param colorful 隐蔽模式
      * @return 对应列名的VALUE值 无法匹配返回""
      */
-    public String getValueByColumn(String colums, boolean colorful) {
-        switch (colums) {
+    public String getValueByColumnName(String columnName, boolean colorful) {
+        switch (columnName) {
             case TableConst.CODE:
                 return this.getCode();
             case TableConst.STOCK_NAME:
-                String name = StringUtils.isNotEmpty(this.getAlias()) ? this.getAlias() : this.getName();
+                String name = StringUtilss.isNotEmpty(this.getAlias()) ? this.getAlias() : this.getName();
                 return colorful ? name : PinYinUtils.toPinYin(this.getName());
             case TableConst.PRICE:
                 return this.getNow();

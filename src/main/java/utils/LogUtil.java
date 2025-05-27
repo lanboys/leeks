@@ -30,7 +30,7 @@ public class LogUtil {
     public static void setProject(Project project) {
         SwingUtilities.invokeLater(() -> {
             for (Project project1 : PROJECT_LIST) {
-                if (StringUtils.equals(project1.getProjectFilePath(), project.getProjectFilePath())) {
+                if (StringUtilss.equals(project1.getProjectFilePath(), project.getProjectFilePath())) {
                     return; //项目路径一致说明已经添加过不用保存
                 }
             }

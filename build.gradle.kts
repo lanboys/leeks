@@ -9,8 +9,14 @@ version = "2.1.0"
 
 
 repositories {
-    mavenCentral()
     mavenLocal()
+    maven {
+        url = uri("https://maven.aliyun.com/repository/public/")
+    }
+    maven {
+        url = uri("https://maven.aliyun.com/repository/central")
+    }
+    mavenCentral()
     intellijPlatform {
         defaultRepositories()
     }
@@ -26,6 +32,14 @@ dependencies {
         // Add necessary plugin dependencies for compilation here, example:
         // bundledPlugin("com.intellij.java")
     }
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    //项目中
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+
+    //测试中
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
 
     testImplementation("junit:junit:4.13.1")
     implementation("com.github.promeg:tinypinyin:2.0.3") // TinyPinyin核心包，约80KB

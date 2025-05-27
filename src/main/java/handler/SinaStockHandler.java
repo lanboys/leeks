@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import org.apache.commons.lang.StringUtils;
 import utils.HttpClientPool;
 import utils.LogUtil;
+import utils.StringUtilss;
 
 import javax.swing.*;
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ public class SinaStockHandler extends StockRefreshHandler {
     }
 
     @Override
-    public void handle(List<String> code) {
+    public void handle(List<StockBean> code) {
         if (code.isEmpty()) {
             return;
         }
@@ -36,20 +37,13 @@ public class SinaStockHandler extends StockRefreshHandler {
         pollStock(code);
     }
 
-    private void pollStock(List<String> code) {
+    private void pollStock(List<StockBean> code) {
         //股票编码，英文分号分隔（成本价和成本接在编码后用逗号分隔）
         List<String> codeList = new ArrayList<>();
-        Map<String, String[]> codeMap = new HashMap<>();
-        for (String str : code) {
-            //兼容原有设置
-            String[] strArray;
-            if (str.contains(",")) {
-                strArray = str.split(",");
-            } else {
-                strArray = new String[]{str};
-            }
-            codeList.add(strArray[0]);
-            codeMap.put(strArray[0], strArray);
+        Map<String, StockBean> codeMap = new HashMap<>();
+        for (StockBean str : code) {
+            codeList.add(str.getCode());
+            codeMap.put(str.getCode(), str );
         }
 
         String params = Joiner.on(",").join(codeList);
@@ -63,7 +57,7 @@ public class SinaStockHandler extends StockRefreshHandler {
         }
     }
 
-    public void handleResponse(String response, Map<String, String[]> codeMap) {
+    public void handleResponse(String response, Map<String, StockBean> codeMap) {
         List<String> refreshTimeList = new ArrayList<>();
         for (String line : response.split("\n")) {
             Matcher matcher = DEFAULT_STOCK_PATTERN.matcher(line);
@@ -93,7 +87,7 @@ public class SinaStockHandler extends StockRefreshHandler {
             bean.setMin(split[5]);
 
             String costPriceStr = bean.getCostPrise();
-            if (StringUtils.isNotEmpty(costPriceStr)) {
+            if (StringUtilss.isNotEmpty(costPriceStr)) {
                 BigDecimal costPriceDec = new BigDecimal(costPriceStr);
                 BigDecimal incomeDiff = now.add(costPriceDec.negate());
                 BigDecimal incomePercentDec = incomeDiff.divide(costPriceDec, 5, RoundingMode.HALF_UP)
@@ -103,7 +97,7 @@ public class SinaStockHandler extends StockRefreshHandler {
                 bean.setIncomePercent(incomePercentDec.toString());
 
                 String bondStr = bean.getBonds();
-                if (StringUtils.isNotEmpty(bondStr)) {
+                if (StringUtilss.isNotEmpty(bondStr)) {
                     BigDecimal bondDec = new BigDecimal(bondStr);
                     BigDecimal incomeDec = incomeDiff.multiply(bondDec)
                             .setScale(2, RoundingMode.HALF_UP);

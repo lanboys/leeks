@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.intellij.util.ExceptionUtil;
+
+import bean.StockBean;
 import handler.CoinRefreshHandler;
 import handler.FundRefreshHandler;
 import handler.StockRefreshHandler;
@@ -38,13 +40,13 @@ public class HandlerJob implements Job {
         try {
             JobDataMap mergedJobDataMap = context.getMergedJobDataMap();
             Object handler = mergedJobDataMap.get(KEY_HANDLER);
-            List<String> codes = (List<String>) mergedJobDataMap.get(KEY_CODES);
+            Object codes = mergedJobDataMap.get(KEY_CODES);
             if (handler instanceof StockRefreshHandler) {
-                ((StockRefreshHandler) handler).handle(codes);
+                ((StockRefreshHandler) handler).handle((List<StockBean>)codes);
             } else if (handler instanceof FundRefreshHandler) {
-                ((FundRefreshHandler) handler).handle(codes);
+                ((FundRefreshHandler) handler).handle((List<String>)codes);
             } else if (handler instanceof CoinRefreshHandler) {
-                ((CoinRefreshHandler) handler).handle(codes);
+                ((CoinRefreshHandler) handler).handle((List<String>)codes);
             }
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             LogUtil.info(String.format("%s 运行 %s ;下一次运行时间为 %s",
